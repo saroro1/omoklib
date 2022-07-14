@@ -1,6 +1,7 @@
+import {Undo} from "./ActionClass/Action";
 
 (function (){
-    const PutResult = require("./PutResult/putResult");
+    const PutResult = require("./ActionClass/Action");
     const {Occupied, InvalidPosition, PutError, Forbid33, Forbid44, Forbid6, Forbid, BlackWins, WhiteWins, PutComplete,} = PutResult;
     function Omok(){
         const EMPTYSTONE = 0;
@@ -23,6 +24,7 @@
 
         /**
          * 보드 초기화 할때 사용
+         * @return void
          */
         function resetBoard(){
             turn = 1;
@@ -959,7 +961,7 @@
         }
         /**
          * 좌표("H8")으로 돌 놓기
-         * @param cord
+         * @param {string} cord
          * @return {InvalidPosition|Occupied|Forbid33|Forbid44|Forbid6|BlackWins|WhiteWins|PutComplete}
          */
         function putStoneByCord(cord){
@@ -1110,13 +1112,13 @@
             },
             /**
              * 돌을 배치합니다
-             * @param cord
+             * @param {string} cord
              * @return {InvalidPosition|Occupied|Forbid33|Forbid44|Forbid6|BlackWins|WhiteWins|PutComplete}
              */
             "putStone" : (cord)=> putStoneByCord(cord),
             /**
              * 해당 장소가 오목이 되는지 검사합니다
-             * @param cord
+             * @param {string} cord
              * @return {boolean}
              */
             "isFive" : (cord)=>{
@@ -1125,7 +1127,7 @@
             },
             /**
              * 해당 장소가 장목(육목)이 되는지 검사합니다
-             * @param cord
+             * @param {string} cord
              * @return {boolean}
              */
             "isOverLine" : (cord)=>{
@@ -1134,7 +1136,7 @@
             },
             /**
              * 해당 장소가 44가 되는지 확인합니다
-             * @param cord
+             * @param {string} cord
              * @return {boolean}
              */
             "isDoubleFour" : (cord)=>{
@@ -1143,7 +1145,7 @@
             },
             /**
              * 해당 장소가 33이 되는지 확인합니다.
-             * @param cord
+             * @param {string} cord
              * @return {boolean}
              */
             "isDoubleThree" : (cord)=>{
@@ -1153,25 +1155,23 @@
             },
             /**
              * 보드를 초기화합니다
+             * @return void
              */
             "reset" : ()=>resetBoard(),
+
             /**
-             * 되돌리기를 합니다.
-             * @return {{currentTurn: string, code: number, rule: {ruleName: string, rule: {allow44: boolean[], allow33: boolean[], sixWin: boolean[], allow6: boolean[]}}, turn: number, boardStack: *[], status: string}|{currentTurn: (string), code: number, rule: {ruleName: string, rule: {allow44: boolean[], allow33: boolean[], sixWin: boolean[], allow6: boolean[]}}, turn: number, boardStack: *[], status: string}}
+             * 되돌리기
+             * @return {Undo}
              */
             "undo" : ()=>{
                 if(boardStack.length ===0 ){
-                    return {
-                        "status": "OK",
-                        "code": -1,
-                        "currentTurn": "b",
-                        "boardStack": [],
-                        "turn": 1,
-                        "rule": {
-                            "ruleName": ruleName,
-                            "rule": rule,
-                        }
-                    }
+                    const undo =  new Undo();
+                    undo.currentTurn = "b";
+                    undo.boardStack = [];
+                    undo.period = turn;
+                    undo.rule.ruleName = ruleName;
+                    undo.rule.rule = rule;
+                    return undo;
                 }
                 else{
                     const last = boardStack.pop();
@@ -1180,17 +1180,13 @@
                     setStone(x,y,EMPTYSTONE);
                     isBlackTurn = !isBlackTurn;
                     turn --;
-                    return {
-                        "status": "UNDO",
-                        "code": -1,
-                        "currentTurn": isBlackTurn ? "b" : "w",
-                        "boardStack": boardStack,
-                        "turn": turn,
-                        "rule": {
-                            "ruleName": ruleName,
-                            "rule": rule,
-                        }
-                    }
+                    const undo =  new Undo();
+                    undo.currentTurn = isBlackTurn ? "b" : "w";
+                    undo.boardStack = boardStack;
+                    undo.period = turn;
+                    undo.rule.ruleName = ruleName;
+                    undo.rule.rule = rule;
+                    return undo;
                 }
             },
             /**

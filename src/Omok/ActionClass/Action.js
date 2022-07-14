@@ -108,6 +108,19 @@
     InvalidPosition.prototype.constructor = InvalidPosition;
     Occupied.prototype = Object.create(PutError.prototype);
     Occupied.prototype.constructor = Occupied;
+
+    function Undo(){
+        this.status = "UNDO";
+        this.code = -1;
+        this.currentTurn = "";
+        this.boardStack = boardStack;
+        this.period = 0;
+        this.rule = {
+            "ruleName" : "",
+            "rule" : {},
+        }
+
+    }
     module.exports = {
         PutComplete: PutComplete,
         BlackWins : BlackWins,
@@ -119,7 +132,11 @@
         PutError : PutError,
         InvalidPosition : InvalidPosition,
         Occupied : Occupied,
+        Undo : Undo,
     }
+
+
+
 
 
 })();

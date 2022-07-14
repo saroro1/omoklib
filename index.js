@@ -1,5 +1,5 @@
 const {Omok} = require("./src/Omok/OmokMain");
-const {Occupied, InvalidPosition, PutError, Forbid33, Forbid44, Forbid6, Forbid, BlackWins, WhiteWins, PutComplete,} = require("./src/Omok/PutResult/putResult");
+const {Occupied, InvalidPosition, PutError, Forbid33, Forbid44, Forbid6, Forbid, BlackWins, WhiteWins, PutComplete, Undo} = require("./src/Omok/ActionClass/Action");
 module.exports = {
     "Omok" : Omok,
     "Occupied" : Occupied,
@@ -12,4 +12,5 @@ module.exports = {
     "BlackWins" : BlackWins,
     "WhiteWins" : WhiteWins,
     "PutComplete" : PutComplete,
+    "Undo" : Undo,
 }

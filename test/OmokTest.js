@@ -3,10 +3,11 @@ const expect = chai.expect;
 
 const {Omok}  = require("../src/Omok/OmokMain");
 const assert = require("assert");
-const {PutError, PutComplete, InvalidPosition, Occupied, BlackWins, Forbid, Forbid6, WhiteWins, Forbid33} = require("../src/Omok/PutResult/putResult");
+const {PutError, PutComplete, InvalidPosition, Occupied, BlackWins, Forbid, Forbid6, WhiteWins, Forbid33} = require("../src/Omok/ActionClass/Action");
 const game = new Omok();
 describe("오목", function () {
     it("착수 확인", function () {
+
         game.reset();
         assert.strictEqual( game.putStone("H122") instanceof InvalidPosition ,true)
         assert.strictEqual( game.putStone("H8") instanceof PutComplete ,true)
@@ -114,7 +115,6 @@ describe("오목", function () {
         game.putStone("I9");
         game.putStone("G8");
         game.putStone("J8");
-
         game.putStone("J9");
         game.putStone("H7");
         game.putStone("G9");
