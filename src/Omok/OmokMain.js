@@ -12,7 +12,6 @@
         let turn = 1;
         let board = [];
         let boardStack = [];
-        let forbidZone = [];
         let rule = {
             "sixWin" : [false,true],
             "allow6" : [false,true],
@@ -1049,6 +1048,14 @@
             return completeMove;
         }
         return {
+            /**
+             * 현재 보드판 상태를 가져옵니다
+             * 0비어있음 1 흑 2 백
+             * @return {*[]}
+             */
+            "getBoard" : ()=>{
+              return board.map( (e)=>e.slice(0));
+            },
             /**
              * 커스텀 룰을 설정합니다
              * 반드시 sixWin, allow6, allow44 allow33이 포함되어야 합니다
