@@ -113,12 +113,13 @@
         this.status = "UNDO";
         this.code = -1;
         this.currentTurn = "";
-        this.boardStack = boardStack;
+        this.boardStack = [];
         this.period = 0;
         this.rule = {
             "ruleName" : "",
             "rule" : {},
         }
+        this.removePos = "";
 
     }
     module.exports = {
