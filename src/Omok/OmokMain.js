@@ -1,9 +1,9 @@
-import {Undo} from "./ActionClass/Action";
 
 (function (){
     const PutResult = require("./ActionClass/Action");
-    const {Occupied, InvalidPosition, PutError, Forbid33, Forbid44, Forbid6, Forbid, BlackWins, WhiteWins, PutComplete,} = PutResult;
+    const {Occupied, InvalidPosition, PutError, Forbid33, Forbid44, Forbid6, Forbid, BlackWins, WhiteWins, PutComplete,Undo} = PutResult;
     function Omok(){
+        let isWin = false;
         const EMPTYSTONE = 0;
         const BLACKSTONE = 1;
         const WHITESTONE = 2;
@@ -31,6 +31,7 @@ import {Undo} from "./ActionClass/Action";
             board = [];
             boardStack = [];
             isBlackTurn = true;
+            isWin = false;
             for(let i = 0; i<15;i++){
                 board.push(Array(15).fill(0,0,15));
             }
@@ -517,11 +518,11 @@ import {Undo} from "./ActionClass/Action";
         }
         /**
          *열린 4 검사, 2일 때 44임  (O,X,O,ㅁ,X,O ㅁ 자리를 검사하기 위해서)  1인 경우는 열린 3을 검사하기 위해 사용
-         * @param x
-         * @param y
-         * @param stone
-         * @param dir
-         * @return {0,2}
+         * @param {number}x
+         * @param {number}y
+         * @param {1,2}stone
+         * @param {1,2,3,4}dir
+         * @return {0,1,2}
          */
         function isOpenFour(x,y,stone,dir){
             if(board?.[x]?.[y] !== EMPTYSTONE){
@@ -730,7 +731,7 @@ import {Undo} from "./ActionClass/Action";
         /**
          * 오목인지 아닌지 검사
          * @param {number} x x좌표
-         * @param {number }y y좌표
+         * @param {number}y y좌표
          * @param {1,2}stone
          * @param {number}dir
          * @return {boolean}
@@ -917,6 +918,9 @@ import {Undo} from "./ActionClass/Action";
         }
 
         function makeImage(showForbid  ){
+            if(isWin){
+                showForbid =false;
+            }
             let url = "https://saroro.dev/omok/image/";
             for(let j = 0; j<BOARDSIZE; j++){
                 for(let i = 0; i<BOARDSIZE; i++){
@@ -944,13 +948,16 @@ import {Undo} from "./ActionClass/Action";
                             url += "_";
                         }
                     }
+                    else{
+                        url += "_";
+                    }
                 }
             }
             return url;
         }
 
 
-        function changeCordtoXY(cord){
+        function changeCordToXY(cord){
             cord = cord.toUpperCase();
             if(!cord.match(/[A-Z]\d{1,2}/)){
                 throw new Error("Invalid Coordinate");
@@ -1018,9 +1025,9 @@ import {Undo} from "./ActionClass/Action";
             }
 
             if(isFive(x,y,currentStone)){
+                isWin = true;
                 setStone(x,y,currentStone);
                 boardStack.push(CODE[x]+ (+y+1));
-                turn++;
                 const winMove = currentStone === BLACKSTONE ? new BlackWins() : new WhiteWins();
                 winMove.period = turn;
                 winMove.currentTurn = currentStone === BLACKSTONE ? "b" : "w";
@@ -1122,7 +1129,7 @@ import {Undo} from "./ActionClass/Action";
              * @return {boolean}
              */
             "isFive" : (cord)=>{
-                const res = changeCordtoXY(cord);
+                const res = changeCordToXY(cord);
                 return isFive(res[0], res[1],isBlackTurn ? BLACKSTONE : WHITESTONE);
             },
             /**
@@ -1131,7 +1138,7 @@ import {Undo} from "./ActionClass/Action";
              * @return {boolean}
              */
             "isOverLine" : (cord)=>{
-                const res = changeCordtoXY(cord);
+                const res = changeCordToXY(cord);
                 return isOverLine(res[0], res[1],isBlackTurn ? BLACKSTONE : WHITESTONE);
             },
             /**
@@ -1140,7 +1147,7 @@ import {Undo} from "./ActionClass/Action";
              * @return {boolean}
              */
             "isDoubleFour" : (cord)=>{
-                const res = changeCordtoXY(cord);
+                const res = changeCordToXY(cord);
                 return isDoubleFour(res[0], res[1],isBlackTurn ? BLACKSTONE : WHITESTONE);
             },
             /**
@@ -1149,7 +1156,7 @@ import {Undo} from "./ActionClass/Action";
              * @return {boolean}
              */
             "isDoubleThree" : (cord)=>{
-                const res = changeCordtoXY(cord);
+                const res = changeCordToXY(cord);
 
                 return isDoubleThree(res[0], res[1],isBlackTurn ? BLACKSTONE : WHITESTONE);
             },
@@ -1171,36 +1178,59 @@ import {Undo} from "./ActionClass/Action";
                     undo.period = turn;
                     undo.rule.ruleName = ruleName;
                     undo.rule.rule = rule;
+                    undo.removePos = null;
                     return undo;
                 }
                 else{
                     const last = boardStack.pop();
                     const y = CODE.indexOf(last[0]);
                     const x = +last.slice(1) -1;
-                    setStone(x,y,EMPTYSTONE);
-                    isBlackTurn = !isBlackTurn;
-                    turn --;
+                    setStone(y,x,EMPTYSTONE);
+                    if(isWin){
+                        isWin = false;
+
+                    }
+                    else{
+                        turn --;
+                        isBlackTurn = !isBlackTurn;
+                    }
                     const undo =  new Undo();
                     undo.currentTurn = isBlackTurn ? "b" : "w";
                     undo.boardStack = boardStack;
                     undo.period = turn;
                     undo.rule.ruleName = ruleName;
                     undo.rule.rule = rule;
+                    undo.removePos = last;
                     return undo;
                 }
             },
             /**
              * 현재 오목판 이미지를 가져옵니다
+             * showForbid가 true라면 금수까지 표시해줍니다
+             * @param {boolean} showForbid
              * @return {string}
              */
-            "getImage" : ()=>{
-                return makeImage(true);
+            "getImage" : (showForbid = true)=>{
+                return makeImage(showForbid);
             },
             /**
              * 현재 오목 기보를 확인합니다.
              * @return {*[]}
              */
-            "getMoves" : ()=>boardStack,
+            "getHistory" : ()=>boardStack,
+
+            /**
+             * 현재 누구 차례인지 가져옵니다
+             * b : 흑 w : 백
+             * @return {"b","w"}
+             */
+
+            "getTurn" : ()=> isBlackTurn ? "b": "w",
+            /**
+             *착수가 몇번째인지 구합니다.
+             * @return {number}
+             */
+            "getPeriod" : ()=>turn,
         }
     }
     module.exports = {
