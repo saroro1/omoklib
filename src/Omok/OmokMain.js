@@ -12,7 +12,6 @@
         let turn = 1;
         let board = [];
         let boardStack = [];
-        let forbidZone = [];
         let rule = {
             "sixWin" : [false,true],
             "allow6" : [false,true],
@@ -22,6 +21,16 @@
         let ruleName = "renju";
         let isBlackTurn = true;
 
+
+        function getStone(x,y){
+            try{
+                return board[x][y];
+            }
+            catch(e){
+                return -1;
+            }
+
+        }
         /**
          * 보드 초기화 할때 사용
          * @return void
@@ -59,7 +68,7 @@
          * @return {boolean}
          */
         function isDoubleThree(x,y,stone){
-            if(board?.[x]?.[y] !== EMPTYSTONE){
+            if( getStone(x,y) !== EMPTYSTONE){
                 return false;
             }
             else if(isFive(x,y,stone)){
@@ -89,7 +98,7 @@
          * @return {boolean}
          */
         function isDoubleFour(x,y,stone){
-            if(board?.[x]?.[y] !== EMPTYSTONE){
+            if(getStone(x,y) !== EMPTYSTONE){
                 return false;
             }
             else if(isFive(x,y,stone)){
@@ -133,10 +142,10 @@
             if(dir ===1){
                 let i = x-1;
                 while(i >=0){
-                    if(board?.[i]?.[y] === stone){
+                    if(getStone(i,y)=== stone){
                         i--;
                     }
-                    else if(board?.[i]?.[y] === EMPTYSTONE){
+                    else if(getStone(i,y) === EMPTYSTONE){
                         if(checkFakeThree(i,y,stone,dir)){
                             setStone(x,y,EMPTYSTONE);
                             return true;
@@ -153,10 +162,10 @@
 
                 i = x+1;
                 while(i < BOARDSIZE){
-                    if(board?.[i]?.[y] === stone){
+                    if(getStone(i,y) === stone){
                         i++;
                     }
-                    else if(board?.[i]?.[y] === EMPTYSTONE){
+                    else if(getStone(i,y) === EMPTYSTONE){
                         if(checkFakeThree(i,y,stone,dir)){
                             setStone(x,y,EMPTYSTONE);
                             return true;
@@ -174,10 +183,10 @@
             else if(dir ===2){
                 let j = y-1;
                 while(j >=0){
-                    if(board?.[x]?.[j] === stone){
+                    if(getStone(x,j)=== stone){
                         j--;
                     }
-                    else if(board?.[x]?.[j] === EMPTYSTONE){
+                    else if(getStone(x,j) === EMPTYSTONE){
                         if(checkFakeThree(x,j,stone,dir)){
                             setStone(x,y,EMPTYSTONE);
                             return true;
@@ -194,10 +203,10 @@
 
                 j = y+1;
                 while(j < BOARDSIZE){
-                    if(board?.[x]?.[j] === stone){
+                    if(getStone(x,j) === stone){
                         j++;
                     }
-                    else if(board?.[x]?.[j] === EMPTYSTONE){
+                    else if(getStone(x,j) === EMPTYSTONE){
                         if(checkFakeThree(x,j,stone,dir)){
                             setStone(x,y,EMPTYSTONE);
                             return true;
@@ -217,11 +226,11 @@
                 let j = y-1;
 
                 while(i>=0 &&j >=0){
-                    if(board?.[i]?.[j] === stone){
+                    if(getStone(i,j)=== stone){
                         i--;
                         j--;
                     }
-                    else if(board?.[i]?.[j] === EMPTYSTONE){
+                    else if(getStone(i,j)=== EMPTYSTONE){
                         if(checkFakeThree(i,j,stone,dir)){
                             setStone(x,y,EMPTYSTONE);
                             return true;
@@ -238,11 +247,11 @@
                 i = x+1;
                 j = y+1;
                 while(i< BOARDSIZE &&j < BOARDSIZE){
-                    if(board?.[i]?.[j] === stone){
+                    if(getStone(i,j) === stone){
                         i++;
                         j++;
                     }
-                    else if(board?.[i]?.[j] === EMPTYSTONE){
+                    else if(getStone(i,j) === EMPTYSTONE){
                         if(checkFakeThree(i,j,stone,dir)){
                             setStone(x,y,EMPTYSTONE);
                             return true;
@@ -261,11 +270,11 @@
                 let i = x-1;
                 let j = y+1;
                 while(i>=0 && j <BOARDSIZE){
-                    if(board?.[i]?.[j] === stone){
+                    if(getStone(i,j)=== stone){
                         i--;
                         j++;
                     }
-                    else if(board?.[i]?.[j] === EMPTYSTONE){
+                    else if(getStone(i,j) === EMPTYSTONE){
                         if(checkFakeThree(i,j,stone,dir)){
                             setStone(x,y,EMPTYSTONE);
                             return true;
@@ -282,11 +291,11 @@
                 i = x+1;
                 j = y-1;
                 while(i< BOARDSIZE &&j >=0){
-                    if(board?.[i]?.[j] === stone){
+                    if(getStone(i,j) === stone){
                         i++;
                         j--;
                     }
-                    else if(board?.[i]?.[j] === EMPTYSTONE){
+                    else if(getStone(i,j) === EMPTYSTONE){
                         if(checkFakeThree(i,j,stone,dir)){
                             setStone(x,y,EMPTYSTONE);
                             return true;
@@ -326,7 +335,7 @@
          * @return {boolean}
          */
         function isFour(x,y,stone,dir){
-            if(board?.[x]?.[y] !== EMPTYSTONE){
+            if(getStone(x,y) !== EMPTYSTONE){
                 return false;
             }
             else if(isFive(x,y,stone)){
@@ -339,10 +348,10 @@
             if(dir ===1){
                 let i = x-1;
                 while(i>=0){
-                    if(board?.[i]?.[y] ===stone){
+                    if(getStone(i,y) ===stone){
                         i--;
                     }
-                    else if(board?.[i]?.[y] === EMPTYSTONE){
+                    else if(getStone(i,y) === EMPTYSTONE){
                         if(isFive(i,y,stone,dir)){
                             setStone(x,y,EMPTYSTONE);
                             return true;
@@ -358,10 +367,10 @@
                 }
                 i = x+1;
                 while(i < BOARDSIZE){
-                    if(board?.[i]?.[y] ===stone){
+                    if(getStone(i,y) ===stone){
                         i++;
                     }
-                    else if(board?.[i]?.[y] === EMPTYSTONE){
+                    else if(getStone(i,y) === EMPTYSTONE){
                         if(isFive(i,y,stone,dir)){
                             setStone(x,y,EMPTYSTONE);
                             return true;
@@ -381,10 +390,10 @@
             else if(dir ===2){
                 let j = y-1;
                 while(j>=0){
-                    if(board?.[x]?.[j] ===stone){
+                    if(getStone(x,j) ===stone){
                         j--;
                     }
-                    else if(board?.[x]?.[j] === EMPTYSTONE){
+                    else if(getStone(x,j)=== EMPTYSTONE){
                         if(isFive(x,j,stone,dir)){
                             setStone(x,y,EMPTYSTONE);
                             return true;
@@ -400,10 +409,10 @@
                 }
                 j = y+1;
                 while(j < BOARDSIZE){
-                    if(board?.[x]?.[j] ===stone){
+                    if(getStone(x,j) ===stone){
                         j++;
                     }
-                    else if(board?.[x]?.[j] === EMPTYSTONE){
+                    else if(getStone(x,j) === EMPTYSTONE){
                         if(isFive(x,j,stone,dir)){
                             setStone(x,y,EMPTYSTONE);
                             return true;
@@ -425,11 +434,11 @@
                 let i = x-1;
                 let j = y-1;
                 while(i>=0 &&j>=0){
-                    if(board?.[i]?.[j] ===stone){
+                    if(getStone(i,j) ===stone){
                         i--;
                         j--;
                     }
-                    else if(board?.[i]?.[j] === EMPTYSTONE){
+                    else if(getStone(i,j) === EMPTYSTONE){
                         if(isFive(i,j,stone,dir)){
                             setStone(x,y,EMPTYSTONE);
                             return true;
@@ -446,11 +455,11 @@
                 i = x+1;
                 j = y+1;
                 while(i<BOARDSIZE &&j < BOARDSIZE){
-                    if(board?.[i]?.[j] ===stone){
+                    if(getStone(i,j) ===stone){
                         i++;
                         j++;
                     }
-                    else if(board?.[i]?.[j] === EMPTYSTONE){
+                    else if(getStone(i,j) === EMPTYSTONE){
                         if(isFive(i,j,stone,dir)){
                             setStone(x,y,EMPTYSTONE);
                             return true;
@@ -471,11 +480,11 @@
                 let i = x-1;
                 let j = y+1;
                 while(i>=0 &&j<BOARDSIZE){
-                    if(board?.[i]?.[j] ===stone){
+                    if(getStone(i,j) ===stone){
                         i--;
                         j++;
                     }
-                    else if(board?.[i]?.[j] === EMPTYSTONE){
+                    else if(getStone(i,j) === EMPTYSTONE){
                         if(isFive(i,j,stone,dir)){
                             setStone(x,y,EMPTYSTONE);
                             return true;
@@ -492,11 +501,11 @@
                 i = x+1;
                 j = y-1;
                 while(i<BOARDSIZE &&j >=0){
-                    if(board?.[i]?.[j] ===stone){
+                    if(getStone(i,j) ===stone){
                         i++;
                         j--;
                     }
-                    else if(board?.[i]?.[j] === EMPTYSTONE){
+                    else if(getStone(i,j) === EMPTYSTONE){
                         if(isFive(i,j,stone,dir)){
                             setStone(x,y,EMPTYSTONE);
                             return true;
@@ -525,7 +534,7 @@
          * @return {0,1,2}
          */
         function isOpenFour(x,y,stone,dir){
-            if(board?.[x]?.[y] !== EMPTYSTONE){
+            if(getStone(x,y) !== EMPTYSTONE){
                 return 0;
             }
             else if(isFive(x,y,stone)){
@@ -539,11 +548,11 @@
             if(dir ===1){
                 let i = x-1;
                 while(i>= -1){
-                    if(board?.[i]?.[y] === stone){
+                    if(getStone(i,y) === stone){
                         i--;
                         nLine++;
                     }
-                    else if(board?.[i]?.[y] === EMPTYSTONE){
+                    else if(getStone(i,y) === EMPTYSTONE){
                         if(!isFive(i,y,stone,dir)){
                             setStone(x,y,EMPTYSTONE);
                             return 0;
@@ -561,11 +570,11 @@
 
                 i = x+1;
                 while(i<BOARDSIZE){
-                    if(board?.[i]?.[y] === stone){
+                    if(getStone(i,y) === stone){
                         i++;
                         nLine++;
                     }
-                    else if(board?.[i]?.[y] === EMPTYSTONE){
+                    else if(getStone(i,y) === EMPTYSTONE){
                         if(isFive(i,y,stone,dir)){
                             setStone(x,y,EMPTYSTONE);
                             return nLine===4 ? 1:2;
@@ -585,11 +594,11 @@
             else if(dir ===2){
                 let j = y-1;
                 while(j>= -1){
-                    if(board?.[x]?.[j] === stone){
+                    if(getStone(x,j) === stone){
                         j--;
                         nLine++;
                     }
-                    else if(board?.[x]?.[j] === EMPTYSTONE){
+                    else if(getStone(x,j) === EMPTYSTONE){
                         if(!isFive(x,j,stone,dir)){
                             setStone(x,y,EMPTYSTONE);
                             return 0;
@@ -607,11 +616,11 @@
 
                 j = y+1;
                 while(j<BOARDSIZE){
-                    if(board?.[x]?.[j] === stone){
+                    if(getStone(x,j) === stone){
                         j++;
                         nLine++;
                     }
-                    else if(board?.[x]?.[j] === EMPTYSTONE){
+                    else if(getStone(x,j) === EMPTYSTONE){
                         if(isFive(x,j,stone,dir)){
                             setStone(x,y,EMPTYSTONE);
                             return nLine===4 ? 1:2;
@@ -632,12 +641,12 @@
                 let i = x-1;
                 let j = y-1;
                 while( i >= -1 && j>= -1){
-                    if(board?.[i]?.[j] === stone){
+                    if(getStone(i,j) === stone){
                         i--;
                         j--;
                         nLine++;
                     }
-                    else if(board?.[i]?.[j] === EMPTYSTONE){
+                    else if(getStone(i,j) === EMPTYSTONE){
                         if(!isFive(i,j,stone,dir)){
                             setStone(x,y,EMPTYSTONE);
                             return 0;
@@ -655,12 +664,12 @@
                 i = x+1;
                 j = y+1;
                 while(i<BOARDSIZE && j<BOARDSIZE){
-                    if(board?.[i]?.[j] === stone){
+                    if(getStone(i,j) === stone){
                         i++;
                         j++;
                         nLine++;
                     }
-                    else if(board?.[i]?.[j] === EMPTYSTONE){
+                    else if(getStone(i,j) === EMPTYSTONE){
                         if(isFive(i,j,stone,dir)){
                             setStone(x,y,EMPTYSTONE);
                             return nLine===4 ? 1:2;
@@ -681,12 +690,12 @@
                 let i = x-1;
                 let j = y+1;
                 while( i >= -1 && j<BOARDSIZE){
-                    if(board?.[i]?.[j] === stone){
+                    if(getStone(i,j) === stone){
                         i--;
                         j++;
                         nLine++;
                     }
-                    else if(board?.[i]?.[j] === EMPTYSTONE){
+                    else if(getStone(i,j) === EMPTYSTONE){
                         if(!isFive(i,j,stone,dir)){
                             setStone(x,y,EMPTYSTONE);
                             return 0;
@@ -704,12 +713,12 @@
                 i = x+1;
                 j = y-1;
                 while(i<BOARDSIZE && j>=-1){
-                    if(board?.[i]?.[j] === stone){
+                    if(getStone(i,j) === stone){
                         i++;
                         j--;
                         nLine++;
                     }
-                    else if(board?.[i]?.[j] === EMPTYSTONE){
+                    else if(getStone(i,j) === EMPTYSTONE){
                         if(isFive(i,j,stone,dir)){
                             setStone(x,y,EMPTYSTONE);
                             return nLine===4 ? 1:2;
@@ -761,7 +770,7 @@
         function checkFiveOrOverLine(x,y,stone,dir = 15){
             let findDir = 0;
             let isOverLine = false;
-            if(board?.[x]?.[y]  !== EMPTYSTONE){
+            if(getStone(x,y)  !== EMPTYSTONE){
                 return 0;
             }
             if(dir ===15){
@@ -776,7 +785,7 @@
                 nLine = 1;
                 let i = x-1;
                 while(i >= 0){
-                    if(board?.[i--]?.[y]=== stone){
+                    if(getStone(i--,y)=== stone){
                         nLine++;
                     }
                     else{
@@ -785,7 +794,7 @@
                 }
                 i = x+1;
                 while(i <BOARDSIZE){
-                    if(board?.[i++]?.[y]=== stone){
+                    if(getStone(i++,y)=== stone){
                         nLine++;
                     }
                     else{
@@ -805,7 +814,7 @@
                 nLine = 1;
                 let j = y-1;
                 while(j >= 0){
-                    if(board?.[x]?.[j--]=== stone){
+                    if(getStone(x,j--)=== stone){
                         nLine++;
                     }
                     else{
@@ -814,7 +823,7 @@
                 }
                 j = y+1;
                 while(j <BOARDSIZE){
-                    if(board?.[x]?.[j++]=== stone){
+                    if(getStone(x,j++) === stone){
                         nLine++;
                     }
                     else{
@@ -836,7 +845,7 @@
                 let i = x-1;
                 let j = y-1;
                 while( i>=0&&j >= 0){
-                    if(board?.[i--]?.[j--]=== stone){
+                    if(getStone(i--,j--)=== stone){
                         nLine++;
                     }
                     else{
@@ -846,7 +855,7 @@
                 i = x+1;
                 j = y+1;
                 while(i < BOARDSIZE &&j <BOARDSIZE){
-                    if(board?.[i++]?.[j++]=== stone){
+                    if(getStone(i++,j++)=== stone){
                         nLine++;
                     }
                     else{
@@ -867,7 +876,7 @@
                 let i = x-1;
                 let j = y+1;
                 while( i>=0 &&j <BOARDSIZE){
-                    if(board?.[i--]?.[j++]=== stone){
+                    if(getStone(i--,j++) === stone){
                         nLine++;
                     }
                     else{
@@ -877,7 +886,7 @@
                 i = x+1;
                 j = y-1;
                 while(i< BOARDSIZE &&j >= 0){
-                    if(board?.[i++]?.[j--]=== stone){
+                    if(getStone(i++,j--)=== stone){
                         nLine++;
                     }
                     else{
