@@ -971,7 +971,9 @@
             }
             return url;
         }
-
+        function makeImageWithMove(showForbid){
+            return makeImage(showForbid)+"/"+boardStack.join(",");
+        }
 
         function changeCordToXY(cord){
             cord = cord.toUpperCase();
@@ -1232,6 +1234,14 @@
                 }
                 return makeImage(showForbid);
             },
+
+            "getImageWithMove" : (showForbid )=>{
+                if(showForbid === undefined){
+                    showForbid = true;
+                }
+                return makeImageWithMove(showForbid);
+            },
+
             /**
              * 현재 오목 기보를 확인합니다.
              * @return {*[]}
