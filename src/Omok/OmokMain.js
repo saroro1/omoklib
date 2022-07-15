@@ -1028,8 +1028,10 @@
             if(isFive(x,y,currentStone)){
                 isWin = true;
                 setStone(x,y,currentStone);
-                boardStack.push(CODE[x]+ (+y+1));
+                const lastPut = CODE[x]+ (+y+1);
+                boardStack.push(lastPut);
                 const winMove = currentStone === BLACKSTONE ? new BlackWins() : new WhiteWins();
+                winMove.lastPut = lastPut;
                 winMove.period = turn;
                 winMove.currentTurn = currentStone === BLACKSTONE ? "b" : "w";
                 winMove.boardStack = boardStack;
@@ -1037,11 +1039,13 @@
                 winMove.rule.rule = rule;
                 return winMove;
             }
-            boardStack.push(CODE[x]+ (+y+1));
+            const lastPut = CODE[x]+ (+y+1)
+            boardStack.push(lastPut);
             setStone(x,y,currentStone);
             turn++;
             isBlackTurn = !isBlackTurn;
             const completeMove = new PutComplete();
+            completeMove.lastPut = lastPut;
             completeMove.period =turn;
             completeMove.currentTurn = currentStone === BLACKSTONE ? "w" : "b";
             completeMove.boardStack = boardStack;
