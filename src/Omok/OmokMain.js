@@ -955,7 +955,7 @@
             return url;
         }
 
-        function makeImageWithMove(showForbid){
+        function getImageWithMove(showForbid){
             return makeImage(showForbid)+"/"+boardStack.join(",");
         }
         function changeCordToXY(cord){
@@ -1228,8 +1228,8 @@
              * @param {boolean}showForbid
              * @return {string}
              */
-            "makeImageWithMove" :(showForbid = true)=>{
-                return makeImageWithMove(showForbid);
+            "getImageWithMove" :(showForbid = true)=>{
+                return getImageWithMove(showForbid);
             },
             /**
              * 현재 오목 기보를 확인합니다.
