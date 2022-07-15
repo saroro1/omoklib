@@ -1270,6 +1270,32 @@
              * @return {number}
              */
             "getPeriod" : ()=>turn,
+            /**
+             * 돌을 강제로 배치합니다(오프닝 룰)
+             * b는 흑 w는 백
+             * @param {string}cord
+             * @param {"b", "w"}stone
+             */
+            "setStoneByForce" : (cord,stone) =>{
+                const j = CODE.indexOf(cord[0]);
+                const i = +cord.slice(1)-1;
+                if(stone === "b"){
+                    setStone(j,i,BLACKSTONE);
+                }
+                else if(stone === "w"){
+                    setStone(j,i,WHITESTONE);
+                }
+            },
+            /**
+             * 돌을 강제로 지웁니다(오프닝 룰)
+             * b는 흑 w는 백
+             * @param {string}cord
+             */
+            "clearStoneByForce" : (cord)=>{
+                const j = CODE.indexOf(cord[0]);
+                const i = +cord.slice(1)-1;
+                setStone(j,i,EMPTYSTONE);
+            }
         }
     }
     module.exports = {
