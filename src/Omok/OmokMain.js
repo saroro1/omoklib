@@ -1,5 +1,11 @@
+/**
+ * 쉽고 빠르게 오목을 만들자
+ * 버그 있으면 hbhj4633@naver.com로 메일좀 보내주세요
+ * @author saroro<hbhj4633@naver.com>
+ */
 
 (function (){
+    "use strict";
     const PutResult = require("./ActionClass/Action");
     const {Occupied, InvalidPosition, PutError, Forbid33, Forbid44, Forbid6, Forbid, BlackWins, WhiteWins, PutComplete,Undo} = PutResult;
     function Omok(){

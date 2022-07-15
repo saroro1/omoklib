@@ -1,4 +1,6 @@
+
 (function(){
+    "use strict";
     function PutComplete(){
         this.status = "ok";
         this.code = 0;
