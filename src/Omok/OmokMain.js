@@ -779,8 +779,8 @@
             if(getStone(x,y)  !== EMPTYSTONE){
                 return 0;
             }
-            if(dir ===undefined){
-                dir = 15;
+            if(dir ===undefined || dir === 15){
+                findDir = 15;
             }
             else{
                 findDir = 1<< (dir-1);
@@ -1045,8 +1045,10 @@
             if(isFive(x,y,currentStone,15)){
                 isWin = true;
                 setStone(x,y,currentStone);
-                boardStack.push(CODE[x]+ (+y+1));
+                let cords = CODE[x]+ (+y+1);
+                boardStack.push(cords);
                 const winMove = currentStone === BLACKSTONE ? new BlackWins() : new WhiteWins();
+                winMove.lastPut = cords
                 winMove.period = turn;
                 winMove.currentTurn = currentStone === BLACKSTONE ? "b" : "w";
                 winMove.boardStack = boardStack;
@@ -1054,12 +1056,14 @@
                 winMove.rule.rule = rule;
                 return winMove;
             }
-            boardStack.push(CODE[x]+ (+y+1));
+            let cords = CODE[x]+ (+y+1);
+            boardStack.push(cords);
             setStone(x,y,currentStone);
             turn++;
             isBlackTurn = !isBlackTurn;
             const completeMove = new PutComplete();
             completeMove.period =turn;
+            completeMove.lastPut = cords
             completeMove.currentTurn = currentStone === BLACKSTONE ? "w" : "b";
             completeMove.boardStack = boardStack;
             completeMove.rule.ruleName = ruleName;
