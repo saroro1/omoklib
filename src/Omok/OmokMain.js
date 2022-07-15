@@ -71,10 +71,10 @@
             if( getStone(x,y) !== EMPTYSTONE){
                 return false;
             }
-            else if(isFive(x,y,stone)){
+            else if(isFive(x,y,stone,15)){
                 return false;
             }
-            else if(isOverLine(x,y,stone)){
+            else if(isOverLine(x,y,stone,15)){
                 return false;
             }
             else if(rule.allow33[stone-1]){
@@ -101,10 +101,10 @@
             if(getStone(x,y) !== EMPTYSTONE){
                 return false;
             }
-            else if(isFive(x,y,stone)){
+            else if(isFive(x,y,stone,15)){
                 return false;
             }
-            else if(isOverLine(x,y,stone)){
+            else if(isOverLine(x,y,stone,15)){
                 return false;
             }
             else if(rule.allow44[stone-1]){
@@ -132,10 +132,10 @@
          * @return {boolean}
          */
         function isOpenThree(x,y,stone,dir){
-            if(isFive(x,y,stone)){
+            if(isFive(x,y,stone,15)){
                 return false;
             }
-            else if(isOverLine(x,y,stone)){
+            else if(isOverLine(x,y,stone,15)){
                 return false;
             }
             setStone(x,y,stone);
@@ -338,10 +338,10 @@
             if(getStone(x,y) !== EMPTYSTONE){
                 return false;
             }
-            else if(isFive(x,y,stone)){
+            else if(isFive(x,y,stone,15)){
                 return false;
             }
-            else if(isOverLine(x,y,stone)){
+            else if(isOverLine(x,y,stone,15)){
                 return false;
             }
             setStone(x,y,stone);
@@ -537,10 +537,10 @@
             if(getStone(x,y) !== EMPTYSTONE){
                 return 0;
             }
-            else if(isFive(x,y,stone)){
+            else if(isFive(x,y,stone,15)){
                 return 0;
             }
-            else if(isOverLine(x,y,stone)){
+            else if(isOverLine(x,y,stone,15)){
                 return 0;
             }
             setStone(x,y,stone);
@@ -742,10 +742,13 @@
          * @param {number} x x좌표
          * @param {number}y y좌표
          * @param {1,2}stone
-         * @param {number}dir
+         * @param {undefined|number}dir
          * @return {boolean}
          */
-        function isFive(x,y,stone,dir=15){
+        function isFive(x,y,stone,dir){
+            if(dir ===undefined){
+                dir = 15;
+            }
             return checkFiveOrOverLine(x,y,stone,dir) ===1;
         }
         /**
@@ -753,10 +756,13 @@
          * @param {number} x x좌표
          * @param {number }y y좌표
          * @param {1,2}stone
-         * @param {number}dir
+         * @param {undefined|number}dir
          * @return {boolean}
          */
-        function isOverLine(x,y,stone,dir =15){
+        function isOverLine(x,y,stone,dir ){
+            if(dir ===undefined){
+                dir = 15;
+            }
             return checkFiveOrOverLine(x,y,stone,dir) ===2;
         }
         /**
@@ -764,17 +770,17 @@
          * @param {number} x x좌표
          * @param {number }y y좌표
          * @param {1,2}stone
-         * @param {number}dir
+         * @param {undefined|number}dir
          * @return {0,1,2}
          */
-        function checkFiveOrOverLine(x,y,stone,dir = 15){
+        function checkFiveOrOverLine(x,y,stone,dir ){
             let findDir = 0;
             let isOverLine = false;
             if(getStone(x,y)  !== EMPTYSTONE){
                 return 0;
             }
-            if(dir ===15){
-                findDir = 15
+            if(dir ===undefined){
+                dir = 15;
             }
             else{
                 findDir = 1<< (dir-1);
@@ -950,7 +956,7 @@
                         else if(isDoubleThree(i,j,currentStone)){
                             url += "3"
                         }
-                        else if(isOverLine(i,j,currentStone)){
+                        else if(isOverLine(i,j,currentStone,15)){
                             url += "6"
                         }
                         else{
@@ -1023,7 +1029,7 @@
                 error.rule.ruleName = ruleName;
                 return error;
             }
-            if(isOverLine(x,y,currentStone)){
+            if(isOverLine(x,y,currentStone,15)){
                 const error = new Forbid6();
                 error.period = turn;
                 error.currentTurn = BLACKSTONE ? "b" : "w";
@@ -1033,7 +1039,7 @@
                 return error;
             }
 
-            if(isFive(x,y,currentStone)){
+            if(isFive(x,y,currentStone,15)){
                 isWin = true;
                 setStone(x,y,currentStone);
                 boardStack.push(CODE[x]+ (+y+1));
@@ -1139,7 +1145,7 @@
              */
             "isFive" : (cord)=>{
                 const res = changeCordToXY(cord);
-                return isFive(res[0], res[1],isBlackTurn ? BLACKSTONE : WHITESTONE);
+                return isFive(res[0], res[1],isBlackTurn ? BLACKSTONE : WHITESTONE,15);
             },
             /**
              * 해당 장소가 장목(육목)이 되는지 검사합니다
@@ -1148,7 +1154,7 @@
              */
             "isOverLine" : (cord)=>{
                 const res = changeCordToXY(cord);
-                return isOverLine(res[0], res[1],isBlackTurn ? BLACKSTONE : WHITESTONE);
+                return isOverLine(res[0], res[1],isBlackTurn ? BLACKSTONE : WHITESTONE,15);
             },
             /**
              * 해당 장소가 44가 되는지 확인합니다
@@ -1192,9 +1198,9 @@
                 }
                 else{
                     const last = boardStack.pop();
-                    const y = CODE.indexOf(last[0]);
-                    const x = +last.slice(1) -1;
-                    setStone(y,x,EMPTYSTONE);
+                    const j = CODE.indexOf(last[0]);
+                    const i = +last.slice(1) -1;
+                    setStone(j,i,EMPTYSTONE);
                     if(isWin){
                         isWin = false;
 
