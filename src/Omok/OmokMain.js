@@ -786,6 +786,7 @@
                 findDir = 1<< (dir-1);
             }
             setStone(x,y,stone);
+            let checkFive;
             let nLine = 1;
             if(findDir & 1){
                 nLine = 1;
@@ -807,7 +808,7 @@
                         break;
                     }
                 }
-                const checkFive = checkIsFive(stone,nLine);
+                checkFive = checkIsFive(stone,nLine);
                 if(  checkFive ===1 ){
                     setStone(x,y,EMPTYSTONE);
                     return 1;
@@ -836,7 +837,7 @@
                         break;
                     }
                 }
-                const checkFive = checkIsFive(stone,nLine);
+                checkFive = checkIsFive(stone,nLine);
                 if(  checkFive ===1 ){
                     setStone(x,y,EMPTYSTONE);
                     return 1;
@@ -868,7 +869,7 @@
                         break;
                     }
                 }
-                const checkFive = checkIsFive(stone,nLine);
+                checkFive = checkIsFive(stone,nLine);
                 if(  checkFive ===1 ){
                     setStone(x,y,EMPTYSTONE);
                     return 1;
@@ -899,7 +900,7 @@
                         break;
                     }
                 }
-                const checkFive = checkIsFive(stone,nLine);
+                checkFive = checkIsFive(stone,nLine);
                 if(  checkFive ===1 ){
                     setStone(x,y,EMPTYSTONE);
                     return 1;
@@ -1012,7 +1013,7 @@
                 return new Occupied();
             }
             if(isDoubleThree(x,y,currentStone)){
-                const error = new Forbid33();
+                let error = new Forbid33();
                 error.period = turn;
                 error.currentTurn = BLACKSTONE ? "b" : "w";
                 error.boardStack = boardStack;
@@ -1021,7 +1022,7 @@
                 return error;
             }
             if(isDoubleFour(x,y,currentStone)){
-                const error = new Forbid44();
+                let  error = new Forbid44();
                 error.period = turn;
                 error.currentTurn = BLACKSTONE ? "b" : "w";
                 error.boardStack = boardStack;
@@ -1030,7 +1031,7 @@
                 return error;
             }
             if(isOverLine(x,y,currentStone,15)){
-                const error = new Forbid6();
+                let error = new Forbid6();
                 error.period = turn;
                 error.currentTurn = BLACKSTONE ? "b" : "w";
                 error.boardStack = boardStack;
