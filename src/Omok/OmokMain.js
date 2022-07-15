@@ -971,7 +971,7 @@
             }
             return url;
         }
-        function makeImageWithMove(showForbid){
+        function getImageWithMove(showForbid){
             return makeImage(showForbid)+"/"+boardStack.join(",");
         }
 
@@ -1239,7 +1239,7 @@
                 if(showForbid === undefined){
                     showForbid = true;
                 }
-                return makeImageWithMove(showForbid);
+                return getImageWithMove(showForbid);
             },
 
             /**
