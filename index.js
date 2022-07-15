@@ -1,6 +1,7 @@
 
 
 (function(){
+    "use strict";
     const Omok = require("./src/Omok/OmokMain");
     const Action = require("./src/Omok/ActionClass/Action");
     module.exports = {

@@ -1,4 +1,5 @@
 (function(){
+    "use strict";
     class PutComplete{
         status = "ok";
         code = 0;
