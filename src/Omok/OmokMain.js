@@ -1188,7 +1188,7 @@
              */
             "undo" : ()=>{
                 if(boardStack.length ===0 ){
-                    const undo =  new Undo();
+                    let undo =  new Undo();
                     undo.currentTurn = "b";
                     undo.boardStack = [];
                     undo.period = turn;
@@ -1210,7 +1210,7 @@
                         turn --;
                         isBlackTurn = !isBlackTurn;
                     }
-                    const undo =  new Undo();
+                    let undo =  new Undo();
                     undo.currentTurn = isBlackTurn ? "b" : "w";
                     undo.boardStack = boardStack;
                     undo.period = turn;
@@ -1226,7 +1226,10 @@
              * @param {boolean} showForbid
              * @return {string}
              */
-            "getImage" : (showForbid = true)=>{
+            "getImage" : (showForbid )=>{
+                if(showForbid === undefined){
+                    showForbid = true;
+                }
                 return makeImage(showForbid);
             },
             /**
