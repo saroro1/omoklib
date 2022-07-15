@@ -5,6 +5,7 @@
         this.period = 0;
         this.currentTurn = 0;
         this.boardStack = [];
+        this.lastPut = "";
         this.rule ={
             "ruleName" : "",
             "rule" : {}
@@ -14,6 +15,10 @@
     function BlackWins(){
         this.status = "bWins";
         this.code = 5;
+        this.period = 0;
+        this.currentTurn = 0;
+        this.boardStack = [];
+        this.lastPut = "";
         this.rule ={
             "ruleName" : "",
             "rule" : {}
@@ -22,6 +27,10 @@
     function WhiteWins(){
         this.status = "wWins"
         this.code = 5;
+        this.period = 0;
+        this.currentTurn = 0;
+        this.boardStack = [];
+        this.lastPut = "";
         this.rule ={
             "ruleName" : "",
             "rule" : {}
@@ -50,8 +59,12 @@
     }
 
     function Forbid33(){
+        this.status = "error";
         this.code = 3;
         this.reason = "33";
+        this.period = 0;
+        this.currentTurn = "";
+        this.boardStack = [];
         this.rule ={
             "ruleName" : "",
             "rule" : {}
@@ -59,8 +72,12 @@
 
     }
     function Forbid44(){
+        this.status = "error";
         this.code = 4;
         this.reason = "44";
+        this.period = 0;
+        this.currentTurn = "";
+        this.boardStack = [];
         this.rule ={
             "ruleName" : "",
             "rule" : {}
@@ -69,8 +86,12 @@
 
     }
     function Forbid6(){
+        this.status = "error";
         this.code = 6;
         this.reason = "6";
+        this.period = 0;
+        this.currentTurn = "";
+        this.boardStack = [];
         this.rule ={
             "ruleName" : "",
             "rule" : {}
@@ -93,12 +114,14 @@
     }
 
     function InvalidPosition(){
+        this.status = "error";
         this.code = -2
         this.reason = "Coordinate is not valid"
 
     }
 
     function Occupied(){
+        this.status = "error";
         this.code = -3
         this.reason = "Stone is already existed"
 
