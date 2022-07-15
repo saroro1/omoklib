@@ -955,7 +955,9 @@
             return url;
         }
 
-
+        function makeImageWithMove(showForbid){
+            return makeImage(showForbid)+"/"+boardStack.join(",");
+        }
         function changeCordToXY(cord){
             cord = cord.toUpperCase();
             if(!cord.match(/[A-Z]\d{1,2}/)){
@@ -1219,6 +1221,15 @@
              */
             "getImage" : (showForbid = true)=>{
                 return makeImage(showForbid);
+            },
+            /**
+             * 현재 오목판 이미지를 착수 순서까지 표시하여 가져옵니다
+             * showForbid가 true라면 금수까지 표시해줍니다
+             * @param {boolean}showForbid
+             * @return {string}
+             */
+            "makeImageWithMove" :(showForbid = true)=>{
+                return makeImageWithMove(showForbid);
             },
             /**
              * 현재 오목 기보를 확인합니다.
