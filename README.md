@@ -39,14 +39,14 @@ https://www.renju.se/renlib/opensrc/
 
 rule 구조는 다음과 같습니다
 
-```json
-{
-  "sixWin" : [false, true], //흑 백 순서대로, true면 육목 만들면 승리 
-  "allow6" : [false, true] , //흑 백 순서대로, true면 육목 가능 false면 불가
-  "allow44" : [false, true] , //흑 백 순서대로, true면 44 가능 false면 불가
-  "allow33" : [false, true] , //흑 백 순서대로, true면 33 가능 false면 불가
-}
-
+```js
+const rule ={
+    "sixWin": [false, true], //흑 백 순서대로, true면 육목 만들면 승리 
+    "allow6": [false, true] , //흑 백 순서대로, true면 육목 가능 false면 불가
+    "allow44": [false, true] , //흑 백 순서대로, true면 44 가능 false면 불가
+    "allow33": [false, true] , //흑 백 순서대로, true면 33 가능 false면 불가
+};
+game.setCustomRule(rule);
 ```
 ## isFive: `function(string cord): boolean`
 해당하는 좌표가 오목이 되는지 검사합니다.
@@ -78,8 +78,9 @@ rule 구조는 다음과 같습니다
 
 
 ```js
-    const err = a.putStone("H555") //InvalidPosition
-    const res =a.putStone("H8") ;// H8에 착수
+    
+    const err = game.putStone("H555") //InvalidPosition
+    const res =game.putStone("H8") ;// H8에 착수
     if(res instanceof PutComplete){ //정상적으로 착수 될 때
         if(res instanceof BlackWins){
             //흑이 승리한 경우
