@@ -14,7 +14,7 @@ https://www.renju.se/renlib/opensrc/
 
 
 
-# 사용법 및 메소드
+#사용법 및 메소드
 ##reset: `function() : void`
 게임을 초기화합니다. 룰은 그대로 놔둡니다
 
@@ -24,6 +24,7 @@ https://www.renju.se/renlib/opensrc/
 흑 : 33 ,44 육목 불가
 
 백 : 다 가능
+
 ##setNormalRule: `function() : void`
 일반룰로 설정합니다. 게임을 시작하기 전에 설정해야 합니다.
 
@@ -48,17 +49,17 @@ const rule ={
 };
 game.setCustomRule(rule);
 ```
-## isFive: `function(string cord): boolean`
+##isFive: `function(string cord): boolean`
 해당하는 좌표가 오목이 되는지 검사합니다.
 
-## isOverLine: `function(string cord): boolean`
+##isOverLine: `function(string cord): boolean`
 해당하는 좌표가 장목이 되는지 검사합니다.
 
-## isDoubleFour: `function(string cord): boolean`
+##isDoubleFour: `function(string cord): boolean`
 해당하는 좌표가 44가 되는지 검사합니다.
-## isOverLine: `function(string cord): boolean`
+##isOverLine: `function(string cord): boolean`
 해당하는 좌표가 33이 되는지 검사합니다.
-## putStone: `function(string cord): InvalidPosition|Occupied|Forbid33|Forbid44|Forbid6|PutComplete|WhiteWins|BlackWins`
+##putStone: `function(string cord): InvalidPosition|Occupied|Forbid33|Forbid44|Forbid6|PutComplete|WhiteWins|BlackWins`
 해당하는 좌표에 돌을 넣습니다.
 
 ###아래는 PutError를 상속받는 클래스입니다
