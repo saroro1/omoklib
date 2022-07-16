@@ -14,28 +14,28 @@ https://www.renju.se/renlib/opensrc/
 
 
 
-#사용법 및 메소드
-##reset: `function() : void`
+# 사용법 및 메소드
+## reset: `function() : void`
 게임을 초기화합니다. 룰은 그대로 놔둡니다
 
-##setRenjuRule: `function() : void`
+## setRenjuRule: `function() : void`
 렌주룰로 설정합니다. 게임을 시작하기 전에 설정해야 합니다.
 
 흑 : 33 ,44 육목 불가
 
 백 : 다 가능
 
-##setNormalRule: `function() : void`
+## setNormalRule: `function() : void`
 일반룰로 설정합니다. 게임을 시작하기 전에 설정해야 합니다.
 
 흑,백 : 33 ,44 불가, 육목은 완성해도 승리하지 않음
 
-##setGomokuRule: `function() : void`
+## setGomokuRule: `function() : void`
 고모쿠룰로 설정합니다. 게임을 시작하기 전에 설정해야 합니다
 
 흑 백 모두 금수 없음
 
-##setCustomRule: `function(rule : object) : void`
+## setCustomRule: `function(rule : object) : void`
 커스텀룰로 설정합니다. 게임을 시작하기 전에 설정해야 합니다
 
 rule 구조는 다음과 같습니다
@@ -49,30 +49,32 @@ const rule ={
 };
 game.setCustomRule(rule);
 ```
-##isFive: `function(string cord): boolean`
+## isFive: `function(string cord): boolean`
 해당하는 좌표가 오목이 되는지 검사합니다.
 
-##isOverLine: `function(string cord): boolean`
+## isOverLine: `function(string cord): boolean`
 해당하는 좌표가 장목이 되는지 검사합니다.
 
-##isDoubleFour: `function(string cord): boolean`
+## isDoubleFour: `function(string cord): boolean`
 해당하는 좌표가 44가 되는지 검사합니다.
-##isOverLine: `function(string cord): boolean`
+
+## isOverLine: `function(string cord): boolean`
 해당하는 좌표가 33이 되는지 검사합니다.
-##putStone: `function(string cord): InvalidPosition|Occupied|Forbid33|Forbid44|Forbid6|PutComplete|WhiteWins|BlackWins`
+
+## putStone: `function(string cord): InvalidPosition|Occupied|Forbid33|Forbid44|Forbid6|PutComplete|WhiteWins|BlackWins`
 해당하는 좌표에 돌을 넣습니다.
 
-###아래는 PutError를 상속받는 클래스입니다
+## 아래는 PutError를 상속받는 클래스입니다
 1. 잘못된 좌표일 때 ("H22" 같은 경우) : InvalidPosition 
 2. 이미 돌이 있을 때 : Occupied
 
 
-###아래는 Forbid를 상속받는 클래스입니다
+## 아래는 Forbid를 상속받는 클래스입니다
 1. 33 금수자리 일 때 : Forbid33
 2. 44 금수자리 일 때 : Forbid44
 3. 장목(6목) 금수자리 일 때 : Forbid6
 
-###아래는 PutComplete를 상속받는 클래스입니다
+## 아래는 PutComplete를 상속받는 클래스입니다
 1. 흑 승리 : BlackWins
 2. 백 승리 : WhiteWins
 
@@ -114,7 +116,7 @@ game.setCustomRule(rule);
     }
     console.log(a.getImage()); //이미지 가져오기
 ```
-###각 클래스 구조는 아래를 참고해주세요
+### 각 클래스 구조는 아래를 참고해주세요
 
 ## undo: `function(): Undo`
 되돌리기
