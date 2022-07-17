@@ -12,28 +12,18 @@ https://www.renju.se/renlib/opensrc/
 
 금수 알고리즘은 여기 소스를 보고 참고하였습니다
 
-
-
 # 사용법 및 메소드
 ## reset: `function() : void`
-게임을 초기화합니다. 룰은 그대로 놔둡니다
+게임을 초기화합니다. 규칙은 그대로 놔둡니다
 
 ## setRenjuRule: `function() : void`
 렌주룰로 설정합니다. 게임을 시작하기 전에 설정해야 합니다.
 
-흑 : 33 ,44 육목 불가
-
-백 : 다 가능
-
 ## setNormalRule: `function() : void`
 일반룰로 설정합니다. 게임을 시작하기 전에 설정해야 합니다.
 
-흑,백 : 33 ,44 불가, 육목은 완성해도 승리하지 않음
-
 ## setGomokuRule: `function() : void`
 고모쿠룰로 설정합니다. 게임을 시작하기 전에 설정해야 합니다
-
-흑 백 모두 금수 없음
 
 ## setCustomRule: `function(rule : object) : void`
 커스텀룰로 설정합니다. 게임을 시작하기 전에 설정해야 합니다
@@ -49,6 +39,14 @@ const rule ={
 };
 game.setCustomRule(rule);
 ```
+룰에 대한 정보
+------------
+|         |      일반룰       |      고모쿠룰      |      렌주룰       |
+|:-------:|:--------------:|:--------------:|:--------------:|
+| 장목(육목)  | 흑 : 가능, 백 : 가능 | 흑 : 승리, 백 : 승리 | 흑 : 불가, 백 : 승리 |
+| 44 (쌍사) | 흑 : 가능, 백 : 가능 | 흑 : 가능, 백 : 가능 | 흑 : 불가, 백 : 가능 |
+| 33 (쌍삼) | 흑 : 불가, 백 : 불가 | 흑 : 가능, 백 : 가능 | 흑 : 불가, 백 : 가능 |
+
 ## isFive: `function(string cord): boolean`
 해당하는 좌표가 오목이 되는지 검사합니다.
 
@@ -65,7 +63,7 @@ game.setCustomRule(rule);
 해당하는 좌표에 돌을 넣습니다.
 
 ## 아래는 PutError를 상속받는 클래스입니다
-1. 잘못된 좌표일 때 ("H22" 같은 경우) : InvalidPosition 
+1. 잘못된 좌표일 때 ("H22" 같은 경우) : InvalidPosition
 2. 이미 돌이 있을 때 : Occupied
 
 
@@ -81,40 +79,40 @@ game.setCustomRule(rule);
 
 
 ```js
-    
-    const err = game.putStone("H555") //InvalidPosition
-    const res =game.putStone("H8") ;// H8에 착수
-    if(res instanceof PutComplete){ //정상적으로 착수 될 때
-        if(res instanceof BlackWins){
-            //흑이 승리한 경우
-        }
-        else if(res instanceof WhiteWins){
-            //백이 승리한 경우
-        }
-        else{
-            //계속 경기가 진행 될 때
-        }
+
+const err = game.putStone("H555") //InvalidPosition
+const res =game.putStone("H8") ;// H8에 착수
+if(res instanceof PutComplete){ //정상적으로 착수 될 때
+    if(res instanceof BlackWins){
+        //흑이 승리한 경우
     }
-    else if(res instanceof  PutError){
-        if(res instanceof InvalidPosition){
-            //잘못된 좌표일 때
-        }
-        else if(res instanceof Occupied){
-            //이미 돌이 있을 때
-        }
+    else if(res instanceof WhiteWins){
+        //백이 승리한 경우
     }
-    else if(res instanceof Forbid){
-        if(res instanceof Forbid33){
-            //33 금수일 때
-        }
-        else if(res instanceof Forbid44){
-            //44 금수일 때
-        }
-        else if(res instanceof Forbid66){
-            //장목 금수 일 때
-        }
+    else{
+        //계속 경기가 진행 될 때
     }
-    console.log(a.getImage()); //이미지 가져오기
+}
+else if(res instanceof  PutError){
+    if(res instanceof InvalidPosition){
+        //잘못된 좌표일 때
+    }
+    else if(res instanceof Occupied){
+        //이미 돌이 있을 때
+    }
+}
+else if(res instanceof Forbid){
+    if(res instanceof Forbid33){
+        //33 금수일 때
+    }
+    else if(res instanceof Forbid44){
+        //44 금수일 때
+    }
+    else if(res instanceof Forbid66){
+        //장목 금수 일 때
+    }
+}
+a.getImage(); //이미지 가져오기
 ```
 ### 각 클래스 구조는 아래를 참고해주세요
 
@@ -132,8 +130,6 @@ game.setCustomRule(rule);
 ## getImage: `function(showForbid : boolean): string`
 
 ## getImageWithMove: `function(showForbid : boolean): string`
-
-
 
 # 오프닝 룰 관련 (오프닝 룰이 아니면 쓰지 마세요)
 
