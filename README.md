@@ -133,7 +133,6 @@ game.setCustomRule(rule);
 
 ## getImageWithMove: `function(showForbid : boolean): string`
 
-## getImageWithMove: `function(showForbid : boolean): string[]`
 
 
 # 오프닝 룰 관련 (오프닝 룰이 아니면 쓰지 마세요)
