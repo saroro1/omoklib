@@ -12,7 +12,7 @@ https://www.renju.se/renlib/opensrc/
 
 금수 알고리즘은 여기 소스를 보고 참고하였습니다
 
-
+~~라이노 스크립트가 싫어요. 어서 빨리 class를 추가해줘......~~
 
 # 사용법 및 메소드
 ## reset: `function() : void`
@@ -114,7 +114,7 @@ else if(res instanceof Forbid){
         //장목 금수 일 때
     }
 }
-console.log(a.getImage()); //이미지 가져오기
+a.getImage(); //이미지 가져오기
 ```
 ### 각 클래스 구조는 아래를 참고해주세요
 
