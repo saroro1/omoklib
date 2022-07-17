@@ -8,6 +8,8 @@ describe("오목", function () {
     it("착수 확인", function () {
         game.reset();
         assert.strictEqual( game.putStone("H122") instanceof Omok.InvalidPosition ,true)
+        assert.strictEqual( game.putStone("HI2") instanceof Omok.InvalidPosition ,true)
+        assert.strictEqual( game.putStone("GL") instanceof Omok.InvalidPosition ,true)
         assert.strictEqual( game.putStone("H10") instanceof Omok.PutComplete ,true)
         assert.strictEqual( game.putStone("가난다다난ㅁㅇㄹ") instanceof Omok.InvalidPosition ,true)
         assert.strictEqual( game.putStone("H10") instanceof Omok.Occupied ,true)
