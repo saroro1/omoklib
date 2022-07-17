@@ -114,11 +114,34 @@ game.setCustomRule(rule);
             //장목 금수 일 때
         }
     }
-    console.log(a.getImage()); //이미지 가져오기
+    console.log(a.get
+    
+    Image()); //이미지 가져오기
 ```
 ### 각 클래스 구조는 아래를 참고해주세요
 
 ## undo: `function(): Undo`
 되돌리기
+
+## getPeriod: `function(): number`
+
+## getBoard: `function(): number[][]`
+
+## getTurn: `function(): "b"|"w"`
+
+## getHistory: `function(): string[]`
+
+## getImage: `function(showForbid : boolean): string`
+
+## getImageWithMove: `function(showForbid : boolean): string`
+
+## getImageWithMove: `function(showForbid : boolean): string[]`
+
+
+# 오프닝 룰 관련 (오프닝 룰이 아니면 쓰지 마세요)
+
+## setStoneByForce: `function(cord : string, stone : "b" | "w"): void`
+
+## clearStoneByForce: `function(cord : string): void`
 
 
