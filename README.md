@@ -133,9 +133,6 @@ console.log(a.getImage()); //이미지 가져오기
 
 ## getImageWithMove: `function(showForbid : boolean): string`
 
-## getImageWithMove: `function(showForbid : boolean): string[]`
-
-
 # 오프닝 룰 관련 (오프닝 룰이 아니면 쓰지 마세요)
 
 ## setStoneByForce: `function(cord : string, stone : "b" | "w"): void`
