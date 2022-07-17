@@ -1237,7 +1237,7 @@
              * @param {boolean}showForbid
              * @return {string}
              */
-            "getImageWithMove" :(showForbid = true)=>{
+                "getImageWithMove" :(showForbid = true)=>{
                 return getImageWithMove(showForbid);
             },
             /**
@@ -1267,6 +1267,9 @@
             "setStoneByForce" : (cord,stone) =>{
                 const j = CODE.indexOf(cord[0]);
                 const i = +cord.slice(1)-1;
+                if(board?.[i]?.[j] !== EMPTYSTONE){
+                    return;
+                }
                 if(stone === "b"){
                     setStone(j,i,BLACKSTONE);
                 }
