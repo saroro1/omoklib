@@ -979,12 +979,11 @@
          */
         function putStoneByCord(cord){
             cord = cord.toUpperCase();
-            if(!cord.match(/[A-Z]\d{1,2}/)){
-                return new InvalidPosition();
-            }
             const j = CODE.indexOf(cord[0]);
             const i = +cord.slice(1)-1;
-
+            if(j === -1 || isNaN(i)){
+                return new InvalidPosition();
+            }
             return putStone(j,i);
         }
 
