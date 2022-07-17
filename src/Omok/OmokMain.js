@@ -1279,6 +1279,9 @@
             "setStoneByForce" : (cord,stone) =>{
                 const j = CODE.indexOf(cord[0]);
                 const i = +cord.slice(1)-1;
+                if(getStone(j,i) !==EMPTYSTONE){
+                    return;
+                }
                 if(stone === "b"){
                     setStone(j,i,BLACKSTONE);
                 }
