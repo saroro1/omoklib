@@ -81,42 +81,40 @@ game.setCustomRule(rule);
 
 
 ```js
-    
-    const err = game.putStone("H555") //InvalidPosition
-    const res =game.putStone("H8") ;// H8에 착수
-    if(res instanceof PutComplete){ //정상적으로 착수 될 때
-        if(res instanceof BlackWins){
-            //흑이 승리한 경우
-        }
-        else if(res instanceof WhiteWins){
-            //백이 승리한 경우
-        }
-        else{
-            //계속 경기가 진행 될 때
-        }
+
+const err = game.putStone("H555") //InvalidPosition
+const res =game.putStone("H8") ;// H8에 착수
+if(res instanceof PutComplete){ //정상적으로 착수 될 때
+    if(res instanceof BlackWins){
+        //흑이 승리한 경우
     }
-    else if(res instanceof  PutError){
-        if(res instanceof InvalidPosition){
-            //잘못된 좌표일 때
-        }
-        else if(res instanceof Occupied){
-            //이미 돌이 있을 때
-        }
+    else if(res instanceof WhiteWins){
+        //백이 승리한 경우
     }
-    else if(res instanceof Forbid){
-        if(res instanceof Forbid33){
-            //33 금수일 때
-        }
-        else if(res instanceof Forbid44){
-            //44 금수일 때
-        }
-        else if(res instanceof Forbid66){
-            //장목 금수 일 때
-        }
+    else{
+        //계속 경기가 진행 될 때
     }
-    console.log(a.get
-    
-    Image()); //이미지 가져오기
+}
+else if(res instanceof  PutError){
+    if(res instanceof InvalidPosition){
+        //잘못된 좌표일 때
+    }
+    else if(res instanceof Occupied){
+        //이미 돌이 있을 때
+    }
+}
+else if(res instanceof Forbid){
+    if(res instanceof Forbid33){
+        //33 금수일 때
+    }
+    else if(res instanceof Forbid44){
+        //44 금수일 때
+    }
+    else if(res instanceof Forbid66){
+        //장목 금수 일 때
+    }
+}
+console.log(a.getImage()); //이미지 가져오기
 ```
 ### 각 클래스 구조는 아래를 참고해주세요
 
