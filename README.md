@@ -114,9 +114,7 @@ game.setCustomRule(rule);
             //장목 금수 일 때
         }
     }
-    console.log(a.get
-    
-    Image()); //이미지 가져오기
+    console.log(a.getImage()); //이미지 가져오기
 ```
 ### 각 클래스 구조는 아래를 참고해주세요
 
