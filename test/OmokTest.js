@@ -7,13 +7,11 @@ const game = new Omok.Omok();
 describe("오목", function () {
     it("착수 확인", function () {
         game.reset();
+        assert.strictEqual( game.putStone("HI12") instanceof Omok.InvalidPosition ,true)
         assert.strictEqual( game.putStone("H122") instanceof Omok.InvalidPosition ,true)
-        assert.strictEqual( game.putStone("HI2") instanceof Omok.InvalidPosition ,true)
-        assert.strictEqual( game.putStone("GL") instanceof Omok.InvalidPosition ,true)
-        assert.strictEqual( game.putStone("H10") instanceof Omok.PutComplete ,true)
+        assert.strictEqual( game.putStone("H8") instanceof Omok.PutComplete ,true)
         assert.strictEqual( game.putStone("가난다다난ㅁㅇㄹ") instanceof Omok.InvalidPosition ,true)
-        assert.strictEqual( game.putStone("H10") instanceof Omok.Occupied ,true)
-        console.log(game.getBoard())
+        assert.strictEqual( game.putStone("H8") instanceof Omok.Occupied ,true)
         console.log(game.getTurn());
         console.log(game.getImage());
     });
@@ -206,6 +204,30 @@ describe("오목", function () {
         assert.strictEqual( game.isDoubleFour("H10") ,true)
         //다음과 같은 경우는 33
 
+    });
+
+
+    it("금수 종합", function () {
+        game.reset();
+        game.putStone("D14");
+        game.putStone("E14");
+        game.putStone("C13");
+        game.putStone("C12");
+        game.putStone( "D12");
+        game.putStone("A9");
+        game.putStone( "C11");
+        game.putStone("E11");
+        game.putStone( "F12");
+        game.putStone( "G12");
+        game.putStone("F13");
+        game.putStone( "N13");
+        game.putStone( "H12");
+        game.putStone( "N11");
+        game.putStone( "I11");
+        game.putStone( "E12");
+        assert.strictEqual( game.isDoubleThree("E13")  ,true)
+        assert.strictEqual( game.isDoubleThree("F14") ,true)
+        console.log(game.getImage());
     });
     it("되돌리기 확인 -1 ", function () {
         game.reset();
