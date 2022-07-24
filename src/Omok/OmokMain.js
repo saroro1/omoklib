@@ -1,15 +1,27 @@
 /**
  * 쉽고 빠르게 오목을 만들자
  * 버그 있으면 hbhj4633@naver.com로 메일좀 보내주세요
+ *
+ * 참고자료
+ * https://cafe.naver.com/omoknara/42062
+ * 대칭수 관련자료
+ * 좋은 글 써주셔서 감사드립니다.
+ *
+ * https://www.renju.se/renlib/opensrc/
+ * 금수 검사부분
+ * 
  * @author saroro<hbhj4633@naver.com>
  */
 
 (function (){
     "use strict";
     const PutResult = require("./ActionClass/Action");
-    const {Occupied, InvalidPosition, PutError, Forbid33, Forbid44, Forbid6, Forbid, BlackWins, WhiteWins, PutComplete,Undo} = PutResult;
+    const {Occupied, InvalidPosition, PutError, Forbid33, Forbid44, Forbid6, Forbid, BlackWins, WhiteWins, PutComplete,Undo, OpeningOccupied, OpeningOk,OpeningError,OpeningInvalid,OpeningMirror} = PutResult;
     function Omok(){
         let isWin = false;
+        let plotSymmetric = [];
+        let yAxis = undefined;
+        let xAxis = undefined;
         const EMPTYSTONE = 0;
         const BLACKSTONE = 1;
         const WHITESTONE = 2;
@@ -977,33 +989,82 @@
             }
             return url;
         }
+
+        /**
+         * 이미지를 착수순대로 가져옵니다.
+         * @param showForbid
+         * @return {string}
+         */
         function getImageWithMove(showForbid){
             return makeImage(showForbid)+"/"+boardStack.join(",");
         }
 
-        function changeCordToXY(cord){
+        /**
+         * 좌표를 [x,y]꼴로 만들어줍니다.
+         * @param cord
+         * @return {(number|number)[]}
+         */
+        function convertCordToXY(cord){
             cord = cord.toUpperCase();
             if(!cord.match(/[A-Z]\d{1,2}/)){
                 throw new Error("Invalid Coordinate");
             }
-            const y = CODE.indexOf(cord[0]);
-            const x = +cord.slice(1)-1;
-            return [y,x];
+            const x = CODE.indexOf(cord[0]);
+            const y = +cord.slice(1)-1;
+            return [x,y];
+        }
+
+
+        /**
+         *
+         * @param {(number|number)[]}arr
+         * @return {string}
+         */
+        function convertXYtoCord(arr){
+            const x = CODE[arr[0]];
+            const y = +arr.slice(1)+1;
+
+            if(x === undefined || !Number.isInteger(y) || y<1 ){
+                return "";
+            }
+            return x+y;
         }
         /**
          * 좌표("H8")으로 돌 놓기
          * @param {string} cord
+         * @param {number}restrict
          * @return {InvalidPosition|Occupied|Forbid33|Forbid44|Forbid6|BlackWins|WhiteWins|PutComplete}
          */
-        function putStoneByCord(cord){
-            cord = cord.toUpperCase();
+        function putStoneByCord(cord, restrict){
+            if(!isValidCord(cord)){
+                return new InvalidPosition();
+            }
+            const j = CODE.indexOf(cord[0]);
+            const i = +cord.slice(1)-1;
+            if(restrict === undefined){
+                return putStone(j,i);
+            }
+            const restrictMin = 7-restrict;
+            const restrictMax = 7+restrict;
+            if( j >= restrictMin && j<=restrictMax && i >=restrictMin && i <=restrictMax){
+                return putStone(j,i);
+            }
+            return new InvalidPosition();
+        }
 
+        /**
+         * 현재 유효한 좌표인지 확인합니다.
+         * @param {string}cord
+         * @return {boolean}
+         */
+        function isValidCord(cord){
+            cord = cord.toUpperCase();
             const j = CODE.indexOf(cord[0]);
             const i = +cord.slice(1)-1;
             if(j === -1 || isNaN(i)){
-                return new InvalidPosition();
+                return false;
             }
-            return putStone(j,i);
+            return !((i < 0 || j < 0) || (i >= BOARDSIZE || j >= BOARDSIZE));
         }
 
         /**
@@ -1014,10 +1075,8 @@
          */
         function putStone(x,y){
             const currentStone = isBlackTurn ? BLACKSTONE : WHITESTONE;
-            if(( x <0 || y <0 )|| ( x>=BOARDSIZE || y>=BOARDSIZE) ){
-                return  new InvalidPosition();
-            }
-            else if(board[x][y] !== EMPTYSTONE){
+
+            if(board[x][y] !== EMPTYSTONE){
                 return new Occupied();
             }
             if(isDoubleThree(x,y,currentStone)){
@@ -1076,26 +1135,141 @@
             completeMove.rule.rule = rule;
             return completeMove;
         }
+
+        function getMiddlePoint(p1, p2){
+            const [x1,y1] = p1;
+            const [x2,y2] = p2;
+            return [(x1+x2)/2, (y1+y2)/2];
+        }
+        function getSlope(p1,p2){
+            const [x1,y1] = p1;
+            const [x2,y2] = p2;
+            return (x1-x2)/(y1-y2) ;
+        }
+
+        function isSymmetric4(){
+            if(turn !==5){
+                return false;
+            }
+            const b1 = convertCordToXY(boardStack[0]);
+            const b2 = convertCordToXY(boardStack[2]);
+            const w1 = convertCordToXY(boardStack[1]);
+            const w2 = convertCordToXY(boardStack[3]);
+            const middleBlack = getMiddlePoint(b1,b2);
+            const middleWhite = getMiddlePoint(w1,w2);
+
+
+            //점대칭 일때
+            if(middleBlack[0] === middleWhite[0] && middleBlack[1] === middleWhite[1]){
+                return true;
+            }
+
+            const middleSlope = Math.abs(getSlope(middleBlack, middleWhite));
+            const blackSlope = Math.abs(getSlope(b1,b2));
+
+            if(middleSlope ===blackSlope){
+                return true;
+            }
+            if(middleSlope * blackSlope ===-1){
+                return true;
+            }
+            if(middleSlope === Infinity && blackSlope === 0){
+                return true;
+            }
+            return middleSlope === 0 && blackSlope === Infinity;
+
+        }
+        function getMirrorPos(cord1,cord2,pos){
+            const [x1,y1] = convertCordToXY(cord1);
+            const [x2,y2] = convertCordToXY(cord2);
+            const [x3,y3] = convertCordToXY(pos);
+            if(x1 === x2 || y1 === y2){
+                let p1 = [-x3+x2+x1,y3];
+                let p2 = [x3 , -y3+y2+y1];
+                let p3 = [-x3+x2+x1 , -y3+y2+y1];
+                return [convertXYtoCord(p1),convertXYtoCord(p2),convertXYtoCord(p3)].filter((e,i,s) => e !=="" && s.indexOf(e) ===i && e!==pos );
+            }
+            const a = (y2-y1)/(x2-x1);
+
+            const x4 = ((1-a*a)*x3+2*a*y3+2*a*a*x1-2*a*y1) / (a*a+1);
+            const y4 = (x3+a*y3-x4)/a;
+
+            const x5 = x1+x2-x4
+            const y5 = y1+y2-y4;
+
+            const x6 = x1+x2-x3;
+            const y6 = y1+y2-y3;
+
+            return [convertXYtoCord([x4,y4]), convertXYtoCord([x5,y5]), convertXYtoCord([x6,y6])].filter((e,i,s) => e !=="" && e!==pos&& s.indexOf(e) ===i  );
+        }
+
+        function undo(){
+            if (boardStack.length === 0) {
+                let undo = new Undo();
+                undo.currentTurn = "b";
+                undo.boardStack = [];
+                undo.period = turn;
+                undo.rule.ruleName = ruleName;
+                undo.rule.rule = rule;
+                undo.removePos = null;
+                return undo;
+            }
+            else {
+                const last = boardStack.pop();
+                const j = CODE.indexOf(last[0]);
+                const i = +last.slice(1) - 1;
+                setStone(j, i, EMPTYSTONE);
+                if (isWin) {
+                    isWin = false;
+
+                } else {
+                    turn--;
+                    isBlackTurn = !isBlackTurn;
+                }
+                let undo = new Undo();
+                undo.currentTurn = isBlackTurn ? "b" : "w";
+                undo.boardStack = boardStack;
+                undo.period = turn;
+                undo.rule.ruleName = ruleName;
+                undo.rule.rule = rule;
+                undo.removePos = last;
+                return undo;
+            }
+        }
         return {
+            /**
+             * 현재 판을 가져옵니다.
+             * @return {*[]}
+             */
+            "getBoard": () => board.map((e) => e.map(e2 => {
+                if (e2 === BLACKSTONE) {
+                    return "b";
+                } else if (e2 === WHITESTONE) {
+                    return "w";
+                } else {
+                    return "_";
+                }
+
+            })),
             /**
              * 커스텀 룰을 설정합니다
              * 반드시 sixWin, allow6, allow44 allow33이 포함되어야 합니다
              * @param rules
              */
-            "setCustomRule" : (rules)=> {
-                if(turn !==1){
+            "setCustomRule": (rules) => {
+                if (turn !== 1) {
                     throw new Error("After first move, you can't change the rule");
                 }
-                if(!Object.hasOwnProperty("sixWin")){
+                if (!Object.hasOwnProperty("sixWin")) {
                     throw new Error("Rule must include sixWin")
                 }
-                if(!Object.hasOwnProperty("allow6")){
+                if (!Object.hasOwnProperty("allow6")) {
                     throw new Error("Rule must include allow6")
                 }
-                if(!Object.hasOwnProperty("allow44")){
+                if (!Object.hasOwnProperty("allow44")) {
                     throw new Error("Rule must include allow44")
                 }
-                if(!Object.hasOwnProperty("allow33")){
+                if (!Object.hasOwnProperty("allow33")) {
                     throw new Error("Rule must include allow33")
                 }
                 rule = rules;
@@ -1103,150 +1277,119 @@
             /**
              * 렌주룰로 설정합니다
              */
-            "setRenjuRule" : ()=>{
-                if(turn !==1){
+            "setRenjuRule": () => {
+                if (turn !== 1) {
                     throw new Error("After first move, you can't change the rule");
                 }
                 rule = {
-                    "sixWin" : [false,true],
-                    "allow6" : [false,true],
-                    "allow44" : [false,true],
-                    "allow33" : [false,true]
+                    "sixWin": [false, true],
+                    "allow6": [false, true],
+                    "allow44": [false, true],
+                    "allow33": [false, true]
                 };
                 ruleName = "renju"
             },
             /**
              * 일반로 설정합니다
              */
-            "setNormalRule" : ()=>{
-                if(turn !==1){
+            "setNormalRule": () => {
+                if (turn !== 1) {
                     throw new Error("After first move, you can't change the rule");
                 }
                 rule = {
-                    "sixWin" : [false,false],
-                    "allow6" : [true,true],
-                    "allow44" : [true,true],
-                    "allow33" : [false,false]
+                    "sixWin": [false, false],
+                    "allow6": [true, true],
+                    "allow44": [true, true],
+                    "allow33": [false, false]
                 };
                 ruleName = "normal"
             },
             /**
              * 고모쿠룰로 설정합니다
              */
-            "setGomokuRule" : ()=>{
-                if(turn !==1){
+
+            "setGomokuRule": () => {
+                if (turn !== 1) {
                     throw new Error("After first move, you can't change the rule");
                 }
                 rule = {
-                    "sixWin" : [true,true],
-                    "allow6" : [true,true],
-                    "allow44" : [true,true],
-                    "allow33" : [true,true]
+                    "sixWin": [true, true],
+                    "allow6": [true, true],
+                    "allow44": [true, true],
+                    "allow33": [true, true]
                 };
                 ruleName = "gomoku"
             },
             /**
-             * 돌을 배치합니다
-             * @param {string} cord
+             *
+             * @param {string}cord
+             * @param {?number}  restrict
              * @return {InvalidPosition|Occupied|Forbid33|Forbid44|Forbid6|BlackWins|WhiteWins|PutComplete}
              */
-            "putStone" : (cord)=> putStoneByCord(cord),
+            "putStone": (cord, restrict) => putStoneByCord(cord, restrict),
             /**
              * 해당 장소가 오목이 되는지 검사합니다
              * @param {string} cord
              * @return {boolean}
              */
-            "isFive" : (cord)=>{
-                const res = changeCordToXY(cord);
-                return isFive(res[0], res[1],isBlackTurn ? BLACKSTONE : WHITESTONE,15);
+            "isFive": (cord) => {
+                const res = convertCordToXY(cord);
+                return isFive(res[0], res[1], isBlackTurn ? BLACKSTONE : WHITESTONE, 15);
             },
             /**
              * 해당 장소가 장목(육목)이 되는지 검사합니다
              * @param {string} cord
              * @return {boolean}
              */
-            "isOverLine" : (cord)=>{
-                const res = changeCordToXY(cord);
-                return isOverLine(res[0], res[1],isBlackTurn ? BLACKSTONE : WHITESTONE,15);
+            "isOverLine": (cord) => {
+                const res = convertCordToXY(cord);
+                return isOverLine(res[0], res[1], isBlackTurn ? BLACKSTONE : WHITESTONE, 15);
             },
             /**
              * 해당 장소가 44가 되는지 확인합니다
              * @param {string} cord
              * @return {boolean}
              */
-            "isDoubleFour" : (cord)=>{
-                const res = changeCordToXY(cord);
-                return isDoubleFour(res[0], res[1],isBlackTurn ? BLACKSTONE : WHITESTONE);
+            "isDoubleFour": (cord) => {
+                const res = convertCordToXY(cord);
+                return isDoubleFour(res[0], res[1], isBlackTurn ? BLACKSTONE : WHITESTONE);
             },
             /**
              * 해당 장소가 33이 되는지 확인합니다.
              * @param {string} cord
              * @return {boolean}
              */
-            "isDoubleThree" : (cord)=>{
-                const res = changeCordToXY(cord);
+            "isDoubleThree": (cord) => {
+                const res = convertCordToXY(cord);
 
-                return isDoubleThree(res[0], res[1],isBlackTurn ? BLACKSTONE : WHITESTONE);
+                return isDoubleThree(res[0], res[1], isBlackTurn ? BLACKSTONE : WHITESTONE);
             },
             /**
              * 보드를 초기화합니다
              * @return void
              */
-            "reset" : ()=>resetBoard(),
+            "reset": () => resetBoard(),
 
             /**
              * 되돌리기
              * @return {Undo}
              */
-            "undo" : ()=>{
-                if(boardStack.length ===0 ){
-                    let undo =  new Undo();
-                    undo.currentTurn = "b";
-                    undo.boardStack = [];
-                    undo.period = turn;
-                    undo.rule.ruleName = ruleName;
-                    undo.rule.rule = rule;
-                    undo.removePos = null;
-                    return undo;
-                }
-                else{
-                    const last = boardStack.pop();
-                    const j = CODE.indexOf(last[0]);
-                    const i = +last.slice(1) -1;
-                    setStone(j,i,EMPTYSTONE);
-                    if(isWin){
-                        isWin = false;
-
-                    }
-                    else{
-                        turn --;
-                        isBlackTurn = !isBlackTurn;
-                    }
-                    let undo =  new Undo();
-                    undo.currentTurn = isBlackTurn ? "b" : "w";
-                    undo.boardStack = boardStack;
-                    undo.period = turn;
-                    undo.rule.ruleName = ruleName;
-                    undo.rule.rule = rule;
-                    undo.removePos = last;
-                    return undo;
-                }
-            },
+            "undo": () => undo(),
             /**
              * 현재 오목판 이미지를 가져옵니다
              * showForbid가 true라면 금수까지 표시해줍니다
              * @param {boolean} showForbid
              * @return {string}
              */
-            "getImage" : (showForbid )=>{
-                if(showForbid === undefined){
+            "getImage": (showForbid) => {
+                if (showForbid === undefined) {
                     showForbid = true;
                 }
                 return makeImage(showForbid);
             },
 
-            "getImageWithMove" : (showForbid )=>{
-                if(showForbid === undefined){
+            "getImageWithMove": (showForbid) => {
+                if (showForbid === undefined) {
                     showForbid = true;
                 }
                 return getImageWithMove(showForbid);
@@ -1256,7 +1399,7 @@
              * 현재 오목 기보를 확인합니다.
              * @return {*[]}
              */
-            "getHistory" : ()=>boardStack,
+            "getHistory": () => boardStack,
 
             /**
              * 현재 누구 차례인지 가져옵니다
@@ -1264,29 +1407,28 @@
              * @return {"b","w"}
              */
 
-            "getTurn" : ()=> isBlackTurn ? "b": "w",
+            "getTurn": () => isBlackTurn ? "b" : "w",
             /**
              *착수가 몇번째인지 구합니다.
              * @return {number}
              */
-            "getPeriod" : ()=>turn,
+            "getPeriod": () => turn,
             /**
              * 돌을 강제로 배치합니다(오프닝 룰)
              * b는 흑 w는 백
              * @param {string}cord
              * @param {"b", "w"}stone
              */
-            "setStoneByForce" : (cord,stone) =>{
+            "setStoneByForce": (cord, stone) => {
                 const j = CODE.indexOf(cord[0]);
-                const i = +cord.slice(1)-1;
-                if(getStone(j,i) !==EMPTYSTONE){
+                const i = +cord.slice(1) - 1;
+                if (getStone(j, i) !== EMPTYSTONE) {
                     return;
                 }
-                if(stone === "b"){
-                    setStone(j,i,BLACKSTONE);
-                }
-                else if(stone === "w"){
-                    setStone(j,i,WHITESTONE);
+                if (stone === "b") {
+                    setStone(j, i, BLACKSTONE);
+                } else if (stone === "w") {
+                    setStone(j, i, WHITESTONE);
                 }
             },
             /**
@@ -1294,11 +1436,47 @@
              * b는 흑 w는 백
              * @param {string}cord
              */
-            "clearStoneByForce" : (cord)=>{
+            "clearStoneByForce": (cord) => {
                 const j = CODE.indexOf(cord[0]);
-                const i = +cord.slice(1)-1;
-                setStone(j,i,EMPTYSTONE);
-            }
+                const i = +cord.slice(1) - 1;
+                setStone(j, i, EMPTYSTONE);
+            },
+            "checkSymmetricOpening": (stoneList) => {
+                if(turn !==5){
+                    return new OpeningInvalid();
+                }
+                if (!isSymmetric4()) {
+                    return new OpeningOk();
+                }
+                let checkStone = [];
+                for (let stone of stoneList) {
+                    if(checkStone.includes(stone)){
+                        return new OpeningOccupied();
+                    }
+                    checkStone.push(stone);
+                    const blackConvert = getMirrorPos(boardStack[0], boardStack[2], stone);
+
+                    const whiteConvert = getMirrorPos(boardStack[1], boardStack[3], stone);
+                    const intersection = blackConvert.filter(value => whiteConvert.includes(value));
+
+                    const checkInput = putStoneByCord(stone);
+                    undo();
+                    if(checkInput instanceof PutError){
+                        if(checkInput instanceof InvalidPosition){
+                            return new OpeningInvalid();
+                        }
+                        else{
+                            return new OpeningOccupied();
+                        }
+
+                    }
+                    if (intersection.some(e => stoneList.includes(e))) {
+                        return new OpeningMirror();
+                    }
+                }
+                return new OpeningOk();
+            },
+
         }
     }
     module.exports = {

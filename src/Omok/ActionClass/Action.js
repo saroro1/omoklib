@@ -147,6 +147,39 @@
         this.removePos = "";
 
     }
+    function OpeningOk(){
+        this.code = 0;
+        this.status = "ok";
+    }
+
+    function OpeningError(){
+
+    }
+    function OpeningInvalid(){
+        this.status = "error";
+        this.code = -2
+        this.reason = "Coordinate is not valid"
+    }
+    function OpeningOccupied(){
+        this.code = -3;
+        this.status = "error";
+        this.reason = "Stone is already existed"
+    }
+    function OpeningMirror(){
+        this.code = -10;
+        this.status = "error";
+        this.reason = "Mirror coordinate";
+        this.coordinate = "";
+    }
+
+    OpeningInvalid.prototype = Object.create(OpeningError.prototype);
+    OpeningInvalid.prototype.constructor = OpeningInvalid;
+    OpeningOccupied.prototype = Object.create(OpeningError.prototype);
+    OpeningOccupied.prototype.constructor = OpeningOccupied;
+
+    OpeningMirror.prototype = Object.create(OpeningError.prototype);
+    OpeningMirror.prototype.constructor = OpeningMirror;
+
     module.exports = {
         PutComplete: PutComplete,
         BlackWins : BlackWins,
@@ -159,6 +192,11 @@
         InvalidPosition : InvalidPosition,
         Occupied : Occupied,
         Undo : Undo,
+        OpeningOk : OpeningOk,
+        OpeningError :  OpeningError,
+        OpeningInvalid : OpeningInvalid,
+        OpeningOccupied : OpeningOccupied,
+        OpeningMirror : OpeningMirror,
     }
 
 

@@ -25,7 +25,7 @@ describe("오목", function () {
         game.putStone("A3");
         game.putStone("J10");
         game.putStone("A4");
-
+        console.log(game.getBoard());
         assert.strictEqual( game.putStone("F6") instanceof Omok.BlackWins ,true)
         console.log(game.getTurn());
         console.log(game.getImage(false));
@@ -279,4 +279,19 @@ describe("오목", function () {
     });
 
 
+
+    it("isSymmetricOpening", function () {
+        game.reset();
+        game.putStone("H8",0);
+        game.putStone("I9",1);
+        game.putStone("F6");
+        game.putStone("J10");
+        console.log(game.getImage())
+        console.log(game.checkSymmetricOpening(["I5", "E9"]))
+    });
+
+    it("isRestrict", function () {
+        game.reset();
+        console.log(game.putStone("H11",3));
+    });
 });
