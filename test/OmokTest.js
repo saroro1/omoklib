@@ -284,11 +284,11 @@ describe("오목", function () {
     it("isSymmetricOpening", function () {
         game.reset();
         game.putStone("H8",0);
-        game.putStone("I9",1);
-        game.putStone("F6");
-        game.putStone("J10");
+        game.putStone("I8",1);
+        game.putStone("I7",2);
+        game.putStone("H7");
         console.log(game.getImage())
-        console.log(game.checkSymmetricOpening(["I5", "E9"]))
+        console.log(game.checkSymmetricOpening(["A1","K6","G10"]))
     });
 
     it("isRestrict", function () {

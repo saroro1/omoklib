@@ -26,7 +26,7 @@
         const BLACKSTONE = 1;
         const WHITESTONE = 2;
         const BOARDSIZE = 15;
-        const CODE = "ABCDEFGHIJKLMNOP";
+        const CODE = "ABCDEFGHIJKLMNO";
         let turn = 1;
         let board = [];
         let boardStack = [];
@@ -1443,38 +1443,40 @@
             },
             "checkSymmetricOpening": (stoneList) => {
                 if(turn !==5){
-                    return new OpeningInvalid();
+                    return (new OpeningInvalid());
                 }
                 if (!isSymmetric4()) {
-                    return new OpeningOk();
+                    return (new OpeningOk());
                 }
                 let checkStone = [];
                 for (let stone of stoneList) {
+                    stone = stone.toUpperCase();
                     if(checkStone.includes(stone)){
-                        return new OpeningOccupied();
+                        return (new OpeningOccupied());
                     }
                     checkStone.push(stone);
                     const blackConvert = getMirrorPos(boardStack[0], boardStack[2], stone);
 
                     const whiteConvert = getMirrorPos(boardStack[1], boardStack[3], stone);
                     const intersection = blackConvert.filter(value => whiteConvert.includes(value));
-
+                    console.log(intersection)
                     const checkInput = putStoneByCord(stone);
+
                     undo();
                     if(checkInput instanceof PutError){
                         if(checkInput instanceof InvalidPosition){
-                            return new OpeningInvalid();
+                            return (new OpeningInvalid());
                         }
                         else{
-                            return new OpeningOccupied();
+                            return (new OpeningOccupied());
                         }
 
                     }
                     if (intersection.some(e => stoneList.includes(e))) {
-                        return new OpeningMirror();
+                        return (new OpeningMirror());
                     }
                 }
-                return new OpeningOk();
+                return (new OpeningOk());
             },
 
         }
