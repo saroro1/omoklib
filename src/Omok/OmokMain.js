@@ -1037,7 +1037,7 @@
          */
         function putStoneByCord(cord, restrict){
             if(!isValidCord(cord)){
-                return new InvalidPosition();
+                return (new InvalidPosition());
             }
             const j = CODE.indexOf(cord[0]);
             const i = +cord.slice(1)-1;
@@ -1049,7 +1049,7 @@
             if( j >= restrictMin && j<=restrictMax && i >=restrictMin && i <=restrictMax){
                 return putStone(j,i);
             }
-            return new InvalidPosition();
+            return (new InvalidPosition());
         }
 
         /**

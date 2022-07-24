@@ -2,6 +2,7 @@ const chai = require("chai");
 const expect = chai.expect;
 const Omok  = require("../index");
 const assert = require("assert");
+const {PutError} = require("../index");
 
 const game = new Omok.Omok();
 describe("오목", function () {
@@ -292,6 +293,7 @@ describe("오목", function () {
 
     it("isRestrict", function () {
         game.reset();
-        console.log(game.putStone("H11",3));
+        console.log(game.putStone("H9",0) );
+        console.log(game.putStone("H10",1));
     });
 });
