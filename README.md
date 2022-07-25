@@ -10,7 +10,7 @@
 
 ~~라이노 스크립트가 싫어요. 어서 빨리 class를 추가해줘......~~
 ## 참고자료 
-https://cafe.naver.com/omoknara/42062
+https://cafe.naver.com/omoknara/42071
 
 대칭수 알고리즘(좋은 글 써주셔서 감사드립니다.)
 
