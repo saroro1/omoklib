@@ -3,13 +3,13 @@
  * 버그 있으면 hbhj4633@naver.com로 메일좀 보내주세요
  *
  * 참고자료
- * https://cafe.naver.com/omoknara/42062
+ * https://cafe.naver.com/omoknara/42071
  * 대칭수 관련자료
  * 좋은 글 써주셔서 감사드립니다.
  *
  * https://www.renju.se/renlib/opensrc/
  * 금수 검사부분
- * 
+ *
  * @author saroro<hbhj4633@naver.com>
  */
 
@@ -968,7 +968,7 @@
                     }
 
                     if(showForbid){
-                        const currentStone = isBlackTurn ? BLACKSTONE : WHITESTONE;
+                        let currentStone = isBlackTurn ? BLACKSTONE : WHITESTONE;
                         if(isDoubleFour(i,j, currentStone)){
                             url += "4"
                         }
@@ -1039,6 +1039,7 @@
             if(!isValidCord(cord)){
                 return (new InvalidPosition());
             }
+            cord = cord.toUpperCase();
             const j = CODE.indexOf(cord[0]);
             const i = +cord.slice(1)-1;
             if(restrict === undefined){
@@ -1076,7 +1077,7 @@
         function putStone(x,y){
             const currentStone = isBlackTurn ? BLACKSTONE : WHITESTONE;
 
-            if(board[x][y] !== EMPTYSTONE){
+            if(getStone(x,y) !== EMPTYSTONE){
                 return new Occupied();
             }
             if(isDoubleThree(x,y,currentStone)){
@@ -1420,6 +1421,7 @@
              * @param {"b", "w"}stone
              */
             "setStoneByForce": (cord, stone) => {
+                cord = cord.toUpperCase();
                 const j = CODE.indexOf(cord[0]);
                 const i = +cord.slice(1) - 1;
                 if (getStone(j, i) !== EMPTYSTONE) {
@@ -1437,6 +1439,7 @@
              * @param {string}cord
              */
             "clearStoneByForce": (cord) => {
+                cord = cord.toUpperCase();
                 const j = CODE.indexOf(cord[0]);
                 const i = +cord.slice(1) - 1;
                 setStone(j, i, EMPTYSTONE);
@@ -1446,21 +1449,34 @@
                     return (new OpeningInvalid());
                 }
                 if (!isSymmetric4()) {
+                    for(let stone of stoneList){
+                        let checkInput = putStoneByCord(stone.toUpperCase());
+                        undo();
+                        if(checkInput instanceof PutError){
+                            if(checkInput instanceof InvalidPosition){
+                                return (new OpeningInvalid());
+                            }
+                            else{
+                                return (new OpeningOccupied());
+                            }
+
+                        }
+                    }
                     return (new OpeningOk());
                 }
                 let checkStone = [];
+
                 for (let stone of stoneList) {
                     stone = stone.toUpperCase();
                     if(checkStone.includes(stone)){
                         return (new OpeningOccupied());
                     }
                     checkStone.push(stone);
-                    const blackConvert = getMirrorPos(boardStack[0], boardStack[2], stone);
+                    let blackConvert = getMirrorPos(boardStack[0], boardStack[2], stone);
 
-                    const whiteConvert = getMirrorPos(boardStack[1], boardStack[3], stone);
-                    const intersection = blackConvert.filter(value => whiteConvert.includes(value));
-                    console.log(intersection)
-                    const checkInput = putStoneByCord(stone);
+                    let whiteConvert = getMirrorPos(boardStack[1], boardStack[3], stone);
+                    let intersection = blackConvert.filter(value => whiteConvert.includes(value));
+                    let checkInput = putStoneByCord(stone);
 
                     undo();
                     if(checkInput instanceof PutError){
@@ -1485,6 +1501,5 @@
         Omok: Omok
     }
 })();
-
 
 
