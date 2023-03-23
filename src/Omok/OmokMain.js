@@ -1469,6 +1469,7 @@
                 for (let stone of stoneList) {
                     stone = stone.toUpperCase();
                     if(checkStone.includes(stone)){
+                        undo();
                         return (new OpeningOccupied());
                     }
                     checkStone.push(stone);
